@@ -36,10 +36,10 @@ func newpost(response http.ResponseWriter, request *http.Request) {
 }
 
 func getpost(response http.ResponseWriter, request *http.Request) {
+	var post Post
 	response.Header().Set("content-type", "application/json")
 	params := mux.Vars(request)
 	id, _ := primitive.ObjectIDFromHex(params["id"])
-	var post Post
 	collection := client.Database("apointy").Collection("posts")
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	err := collection.FindOne(ctx, Post{ID: id}).Decode(&post)
@@ -52,23 +52,19 @@ func getpost(response http.ResponseWriter, request *http.Request) {
 }
 
 func getpostwithuser(response http.ResponseWriter, request *http.Request) {
+	var post []Post
 	response.Header().Set("content-type", "application/json")
 	params := mux.Vars(request)
 	id, _ := params["id"]
-	var post []Post
 	page, _ := strconv.Atoi(params["pages"])
 	var perPage int64 = 2
-
 	collection := client.Database("apointy").Collection("post")
-
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-
 	filter := bson.M{}
 	collection.CountDocuments(ctx, filter)
 	findOptions := options.Find()
 	findOptions.SetSkip((int64(page) - 1) * perPage)
 	findOptions.SetLimit(perPage)
-
 	cursor, err := collection.Find(ctx, Post{UserId: id}, findOptions)
 	if err != nil {
 		response.WriteHeader(http.StatusInternalServerError)
