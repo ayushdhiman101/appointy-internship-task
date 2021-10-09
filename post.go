@@ -18,12 +18,17 @@ type Post struct {
 	UserId  string             `json:"userId,omitempty" bson:"userId,omitempty"`
 	Caption string             `json:"caption,omitempty" bson:"caption,omitempty"`
 	Iurl    string             `json:"iurl,omitempty" bson:"iurl,omitempty"`
+	Tstamp  string             `json:"tstamp,omitempty" bson:"tstamp,omitempty"`
 }
 
 func newpost(response http.ResponseWriter, request *http.Request) {
-	response.Header().Set("content-type", "application/json")
 	var post Post
+	
+	dt := time.Now()
+	t := dt.String()
+	response.Header().Set("content-type", "application/json")
 	_ = json.NewDecoder(request.Body).Decode(&post)
+	post.Tstamp = t
 	collection := client.Database("apointy").Collection("posts")
 	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 	result, _ := collection.InsertOne(ctx, post)
