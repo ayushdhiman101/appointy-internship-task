@@ -51,7 +51,7 @@ func main() {
 	router.HandleFunc("/users/{id}", getuser).Methods("GET")
 	router.HandleFunc("/posts", newpost).Methods("POST")
 	router.HandleFunc("/posts/{id}", getpost).Methods("GET")
-	router.HandleFunc("/posts/users/{id}/{pages}", getpostwithusername).Methods("GET")
+	router.HandleFunc("/posts/users/{id}/{pages}", getpostwithuser).Methods("GET")
 	http.ListenAndServe(":9090", router)
 
 }
