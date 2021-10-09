@@ -46,7 +46,7 @@ func getpost(response http.ResponseWriter, request *http.Request) {
 	json.NewEncoder(response).Encode(post)
 }
 
-func getpostwithusername(response http.ResponseWriter, request *http.Request) {
+func getpostwithuser(response http.ResponseWriter, request *http.Request) {
 	response.Header().Set("content-type", "application/json")
 	params := mux.Vars(request)
 	id, _ := params["id"]
